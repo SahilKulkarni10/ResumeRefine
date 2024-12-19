@@ -17,56 +17,21 @@ const Hero = () => {
     setUploadStatus(null); // Reset status when new files are selected
   };
 
-  // const handleSubmit = async () => {
-  //   if (files.length !== numResumes) {
-  //     alert(`Please upload exactly ${numResumes} resumes.`);
-  //     return;
-  //   }
-
-  //   const formData = new FormData();
-  //   Array.from(files).forEach((file) => formData.append("file", file));
-  //   formData.append("skill", skill);
-  //   formData.append("requiredSkills", requiredSkills);
-
-  //   try {
-  //     const response = await axios.post(
-  //       "http://127.0.0.1:5000/parseresume",
-  //       formData,
-  //       {
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //         },
-  //       }
-  //     );
-
-  //     if (response.status === 200) {
-  //       setOutput(response.data);
-  //       setUploadStatus("success");
-  //     } else {
-  //       setOutput(null);
-  //       setUploadStatus("error");
-  //     }
-  //   } catch (error) {
-  //     console.error("There was an error uploading the files!", error);
-  //     setUploadStatus("error");
-  //     setOutput(null);
-  //   }
-  // };
-
   const handleSubmit = async () => {
     if (files.length !== numResumes) {
       alert(`Please upload exactly ${numResumes} resumes.`);
       return;
     }
-  
+
     const formData = new FormData();
     Array.from(files).forEach((file) => formData.append("file", file));
     formData.append("skill", skill);
     formData.append("requiredSkills", requiredSkills);
-  
+
     try {
       const response = await axios.post(
-        "https://resumebackend-sigma.vercel.app/parseresume", // Updated backend URL
+        // "http://127.0.0.1:5000/parseresume",
+        "https://resumebackend-sigma.vercel.app/parseresume",
         formData,
         {
           headers: {
@@ -74,7 +39,7 @@ const Hero = () => {
           },
         }
       );
-  
+
       if (response.status === 200) {
         setOutput(response.data);
         setUploadStatus("success");
@@ -88,7 +53,6 @@ const Hero = () => {
       setOutput(null);
     }
   };
-  
 
   return (
     <>
