@@ -192,7 +192,7 @@ const Hero = () => {
   const [output, setOutput] = useState(null);
 
   // Backend URLs
-  const localBackendURL = "http://127.0.0.1:5000/parseresume";
+  const localBackendURL = "http://127.0.0.1:5001/parseresume";
   const vercelBackendURL = "https://resumebackend-sigma.vercel.app/parseresume";
 
   // Use localhost during development, Vercel in production
