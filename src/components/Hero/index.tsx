@@ -177,8 +177,6 @@
 
 
 
-
-
 "use client";
 import React, { useState } from "react";
 import axios from "axios";
@@ -192,9 +190,8 @@ const Hero = () => {
   const [output, setOutput] = useState(null);
 
   // Backend URLs
-  const localBackendURL = "http://127.0.0.1:5001/parseresume";
-  // const vercelBackendURL = "https://resumebackend-sigma.vercel.app/parseresume";
-  const vercelBackendURL =  "https://resumebackend-25nh.onrender.com";
+  const localBackendURL = "http://127.0.0.1:5001/parseresume"; // Local server URL
+  const vercelBackendURL = "https://resumebackend-25nh.onrender.com/parseresume"; // Production URL (update this)
   // Use localhost during development, Vercel in production
   const backendURL =
     process.env.NODE_ENV === "development" ? localBackendURL : vercelBackendURL;
