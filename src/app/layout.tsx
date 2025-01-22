@@ -1,6 +1,6 @@
 "use client";
 
-import Footer from "@/components/Footer";
+// import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Inter } from "next/font/google";
@@ -26,7 +26,7 @@ export default function RootLayout({
         <Providers>
           <Header />
           {children}
-          <Footer />
+          {/* <Footer /> */}
           <ScrollToTop />
         </Providers>
       </body>
