@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import axios from "axios";
-import { FaUpload, FaSearch, FaFilePdf, FaCheckCircle, FaTimesCircle, FaRegLightbulb, FaChartLine } from "react-icons/fa";
+import { FaUpload, FaSearch, FaFilePdf, FaCheckCircle, FaTimesCircle, FaRegLightbulb, FaChartLine, FaCommentAlt } from "react-icons/fa";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
@@ -13,17 +13,24 @@ const Hero = () => {
   const [output, setOutput] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [submissionType, setSubmissionType] = useState(null);
+  const [resumeFeedback, setResumeFeedback] = useState({});
+  const [isFeedbackLoading, setIsFeedbackLoading] = useState(false);
 
   // Backend URLs
   const localBackendURL = "http://127.0.0.1:5001/parseresume";
   const vercelBackendURL = "https://resumebackend-25nh.onrender.com/parseresume";
+  const localFeedbackURL = "http://127.0.0.1:5001/resumefeedback";
+  const vercelFeedbackURL = "https://resumebackend-25nh.onrender.com/resumefeedback";
 
   const backendURL =
     process.env.NODE_ENV === "development" ? localBackendURL : vercelBackendURL;
+  const feedbackURL = 
+    process.env.NODE_ENV === "development" ? localFeedbackURL : vercelFeedbackURL;
 
   const handleFileChange = (e) => {
     setFiles(e.target.files);
     setUploadStatus(null);
+    setResumeFeedback({});
   };
 
   const handleSubmit = async () => {
@@ -53,6 +60,8 @@ const Hero = () => {
       if (response.status === 200) {
         setOutput(response.data);
         setUploadStatus("success");
+        // After successful upload, get feedback for the resumes
+        getResumeFeedback(formData);
       } else {
         setOutput(null);
         setUploadStatus("error");
@@ -63,6 +72,56 @@ const Hero = () => {
       setOutput(null);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const getResumeFeedback = async (formData) => {
+    setIsFeedbackLoading(true);
+    try {
+      console.log("Requesting AI feedback from:", feedbackURL);
+      const response = await axios.post(feedbackURL, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        timeout: 30000, // 30 second timeout
+      });
+
+      if (response.status === 200) {
+        console.log("Feedback received:", response.data);
+        // Check if the response contains error messages
+        const feedbackData = {};
+        
+        Object.entries(response.data).forEach(([filename, feedback]) => {
+          // If feedback message indicates API key not configured or other error
+          if (typeof feedback === 'string' && 
+              (feedback.includes("API key not configured") || 
+               feedback.includes("Unable to generate AI feedback"))) {
+            feedbackData[filename] = "• AI feedback unavailable at this time\n• Try again later\n• Make sure your resume is ATS-compatible with clear section headers\n• Include keywords from the job description\n• Use standard formatting";
+          } else {
+            feedbackData[filename] = feedback;
+          }
+        });
+        
+        setResumeFeedback(feedbackData);
+      } else {
+        console.error("Error response from feedback API:", response);
+        // Set a fallback message for all files
+        const fallbackFeedback = {};
+        Array.from(files).forEach(file => {
+          fallbackFeedback[file.name] = "• Ensure your resume uses ATS-friendly formatting\n• Include relevant keywords from the job description\n• Quantify achievements where possible\n• Use standard section headings like 'Experience' and 'Skills'\n• Remove graphics, tables, and complex formatting";
+        });
+        setResumeFeedback(fallbackFeedback);
+      }
+    } catch (error) {
+      console.error("Error getting resume feedback:", error);
+      // Set a fallback message for all files
+      const fallbackFeedback = {};
+      Array.from(files).forEach(file => {
+        fallbackFeedback[file.name] = "• Ensure your resume uses ATS-friendly formatting\n• Include relevant keywords from the job description\n• Quantify achievements where possible\n• Use standard section headings like 'Experience' and 'Skills'\n• Remove graphics, tables, and complex formatting";
+      });
+      setResumeFeedback(fallbackFeedback);
+    } finally {
+      setIsFeedbackLoading(false);
     }
   };
 
@@ -101,6 +160,11 @@ const Hero = () => {
       icon: <FaChartLine className="h-6 w-6 text-primary" />,
       title: "ATS Optimization",
       description: "Ensure your resume passes through Applicant Tracking Systems",
+    },
+    {
+      icon: <FaCommentAlt className="h-6 w-6 text-primary" />,
+      title: "Resume Feedback",
+      description: "Get AI-powered suggestions to improve your resume",
     },
   ];
 
@@ -159,6 +223,19 @@ const Hero = () => {
                       </p>
                     </div>
                   ))}
+                </motion.div>
+
+                <motion.div
+                  variants={itemVariants}
+                  className="mb-6 rounded-lg bg-indigo-50 p-4 dark:bg-indigo-900/10 border-l-4 border-indigo-500"
+                >
+                  <div className="flex items-center mb-2">
+                    <FaRegLightbulb className="text-indigo-600 mr-2 text-xl" />
+                    <h3 className="font-semibold text-gray-900 dark:text-white">New! AI Resume Feedback</h3>
+                  </div>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    Upload your resume and get personalized AI-powered suggestions to improve your ATS score and increase your chances of getting an interview.
+                  </p>
                 </motion.div>
 
                 <motion.div variants={itemVariants} className="mb-6">
@@ -360,6 +437,83 @@ const Hero = () => {
                                 )}
                               </div>
                             </div>
+
+                            {/* Resume Feedback Section */}
+                            {resumeFeedback[resume.filename] && (
+                              <div className="mt-4 border-t border-gray-100 pt-4 dark:border-gray-700">
+                                <div className="flex items-center mb-3">
+                                  <FaRegLightbulb className="mr-2 text-yellow-500 text-xl" />
+                                  <h4 className="font-semibold text-gray-800 dark:text-white text-lg">AI Resume Feedback</h4>
+                                </div>
+                                
+                                {resumeFeedback[resume.filename].includes("API key is invalid") ? (
+                                  // API Key Error Message
+                                  <div className="bg-red-50 p-4 rounded-md dark:bg-red-900/10">
+                                    <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-line mb-2">
+                                      {resumeFeedback[resume.filename]}
+                                    </p>
+                                    <a 
+                                      href="https://aistudio.google.com/app/apikey" 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="mt-2 inline-flex items-center text-sm font-medium text-blue-600 hover:underline dark:text-blue-400"
+                                    >
+                                      <span>Get a free API key</span>
+                                      <svg className="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd"></path>
+                                      </svg>
+                                    </a>
+                                  </div>
+                                ) : (
+                                  // Proper Feedback Display with Enhanced Formatting
+                                  <div className="bg-gradient-to-r from-yellow-50 to-amber-50 p-4 rounded-lg shadow-sm dark:from-yellow-900/10 dark:to-amber-900/10 border border-yellow-100 dark:border-yellow-800/20">
+                                    <div className="space-y-3">
+                                      {resumeFeedback[resume.filename].split('\n').filter(line => line.trim()).map((line, index) => (
+                                        <div key={index} className="flex items-start">
+                                          {line.trim().startsWith('•') ? (
+                                            <>
+                                              <span className="text-amber-500 dark:text-amber-400 mr-2 mt-0.5">{line.trim().charAt(0)}</span>
+                                              <p className="text-gray-700 dark:text-gray-300 text-sm flex-1">
+                                                {line.trim().substring(1).trim()}
+                                              </p>
+                                            </>
+                                          ) : (
+                                            <p className="text-gray-700 dark:text-gray-300 text-sm">
+                                              {line.trim()}
+                                            </p>
+                                          )}
+                                        </div>
+                                      ))}
+                                    </div>
+
+                                    <div className="mt-3 pt-3 border-t border-yellow-200 dark:border-yellow-800/30">
+                                      <div className="flex justify-between items-center">
+                                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                                          AI-powered feedback based on your resume content
+                                        </span>
+                                        <div className="flex space-x-2">
+                                          <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-300">
+                                            AI Analysis
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                            
+                            {isFeedbackLoading && !resumeFeedback[resume.filename] && (
+                              <div className="mt-4 border-t border-gray-100 pt-4 dark:border-gray-700">
+                                <div className="flex items-center justify-center p-3">
+                                  <svg className="animate-spin h-5 w-5 text-primary mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                  </svg>
+                                  <span className="text-sm text-gray-600 dark:text-gray-400">Generating AI feedback...</span>
+                                </div>
+                              </div>
+                            )}
                           </motion.div>
                         ))}
                       </div>
