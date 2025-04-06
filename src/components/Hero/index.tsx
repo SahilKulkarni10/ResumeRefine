@@ -20,7 +20,7 @@ const Hero = () => {
   const localBackendURL = "http://127.0.0.1:5001/parseresume";
   const vercelBackendURL = "https://resumebackend-25nh.onrender.com/parseresume";
   const localFeedbackURL = "http://127.0.0.1:5001/resumefeedback";
-  const vercelFeedbackURL = "https://resumebackend-25nh.onrender.com/resumefeedback";
+  const vercelFeedbackURL = "https://resumebackend-1-feedback-ai.onrender.com";
 
   const backendURL =
     process.env.NODE_ENV === "development" ? localBackendURL : vercelBackendURL;
