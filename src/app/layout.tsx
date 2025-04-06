@@ -1,9 +1,10 @@
 "use client";
 
-// import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Inter } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 import "node_modules/react-modal-video/css/modal-video.css";
 import "../styles/index.css";
 
@@ -23,15 +24,15 @@ export default function RootLayout({
       <head />
 
       <body className={`bg-[#FCFCFC] dark:bg-black ${inter.className}`}>
-        <Providers>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Header />
           {children}
-          {/* <Footer /> */}
+          <Footer />
           <ScrollToTop />
-        </Providers>
+        </ThemeProvider>
       </body>
     </html>
   );
 }
 
-import { Providers } from "./providers";
+
