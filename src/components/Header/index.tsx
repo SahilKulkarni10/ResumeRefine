@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import ThemeToggler from "./ThemeToggler";
 import menuData from "./menuData";
+import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
 
 const Header = () => {
   // Navbar toggle state
@@ -34,6 +35,19 @@ const Header = () => {
 
   // Get the current pathname for active link styling
   const pathname = usePathname();
+  
+  // Get user information from Clerk
+  const { isSignedIn, user } = useUser();
+  
+  // Function to get user initials
+  const getUserInitials = () => {
+    if (!user || !user.firstName) return "";
+    
+    const firstName = user.firstName.charAt(0);
+    const lastName = user.lastName ? user.lastName.charAt(0) : "";
+    
+    return (firstName + lastName).toUpperCase();
+  };
 
   return (
     <header
@@ -133,9 +147,28 @@ const Header = () => {
               </nav>
             </div>
 
-            {/* Theme Toggler */}
+            {/* Auth Buttons and Theme Toggler */}
             <div className="flex items-center justify-end pr-16 lg:pr-0">
-              <div>
+              <div className="flex items-center gap-4">
+                {isSignedIn ? (
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium text-sm dark:text-white">{getUserInitials()}</span>
+                    <UserButton afterSignOutUrl="/" />
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <SignInButton mode="modal">
+                      <button className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary/90">
+                        Sign In
+                      </button>
+                    </SignInButton>
+                    <SignUpButton mode="modal">
+                      <button className="rounded-md border border-primary px-4 py-2 text-sm font-medium text-primary transition hover:bg-primary/10 dark:text-white">
+                        Sign Up
+                      </button>
+                    </SignUpButton>
+                  </div>
+                )}
                 <ThemeToggler />
               </div>
             </div>
