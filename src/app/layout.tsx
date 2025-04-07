@@ -17,7 +17,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        elements: {
+          formButtonPrimary: 'bg-blue-500 hover:bg-blue-600',
+          footerActionLink: 'text-blue-500 hover:text-blue-600'
+        }
+      }}
+    >
       <html suppressHydrationWarning lang="en">
         {/*
           <head /> will contain the components returned by the nearest parent
