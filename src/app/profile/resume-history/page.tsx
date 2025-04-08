@@ -210,7 +210,7 @@ Matched Skills: ${resume.matchedSkills.join(', ')}`;
                 No resumes found
               </h3>
               <p className="text-body-color dark:text-body-color-dark mb-6">
-                You haven't uploaded any resumes to this profile yet.
+                You haven&apos;t uploaded any resumes to this profile yet.
               </p>
               <Link
                 href="/"

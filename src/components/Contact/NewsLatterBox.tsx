@@ -57,7 +57,7 @@ const NewsLatterBox = () => {
           {isSubmitting ? "Subscribing..." : "Subscribe"}
         </button>
         <p className="text-center text-xs sm:text-sm leading-relaxed text-body-color dark:text-body-color-dark">
-          No spam guaranteed, So please don't send any spam mail.
+          No spam guaranteed, So please don&apos;t send any spam mail.
         </p>
       </form>
 

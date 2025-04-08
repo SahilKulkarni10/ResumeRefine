@@ -209,7 +209,7 @@ const FeedbackHistoryPage = () => {
                 No feedback found
               </h3>
               <p className="text-body-color dark:text-body-color-dark mb-6">
-                You haven't received any resume feedback in this profile yet.
+                You haven&apos;t received any resume feedback in this profile yet.
               </p>
               <Link
                 href="/"
