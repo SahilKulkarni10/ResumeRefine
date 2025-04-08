@@ -113,6 +113,7 @@ const Header = () => {
                               ? "text-primary dark:text-white"
                               : "text-dark hover:text-primary dark:text-white/70 dark:hover:text-white"
                           }`}
+                          onClick={() => setNavbarOpen(false)}
                         >
                           {menuItem.title}
                         </Link>
@@ -134,6 +135,7 @@ const Header = () => {
                                 href={submenuItem.path}
                                 key={subIndex}
                                 className="block rounded py-2.5 text-sm text-dark hover:text-primary dark:text-white/70 dark:hover:text-white lg:px-3"
+                                onClick={() => setNavbarOpen(false)}
                               >
                                 {submenuItem.title}
                               </Link>
@@ -149,21 +151,45 @@ const Header = () => {
 
             {/* Auth Buttons and Theme Toggler */}
             <div className="flex items-center justify-end pr-16 lg:pr-0">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 md:gap-4">
                 {isSignedIn ? (
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium text-sm dark:text-white">{getUserInitials()}</span>
-                    <UserButton afterSignOutUrl="/" />
+                  <div className="flex items-center gap-1 md:gap-2">
+                    <span className="hidden sm:inline-block font-medium text-xs sm:text-sm dark:text-white">{getUserInitials()}</span>
+                    <div className="relative group">
+                      <UserButton afterSignOutUrl="/" />
+                      <div className="absolute right-0 top-full z-40 mt-2 w-48 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition-all opacity-0 invisible group-hover:opacity-100 group-hover:visible dark:bg-dark">
+                        <div className="py-1">
+                          <Link
+                            href="/profile"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white/70 dark:hover:bg-gray-800"
+                          >
+                            My Profile
+                          </Link>
+                          <Link
+                            href="/profile/resume-history"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white/70 dark:hover:bg-gray-800"
+                          >
+                            Resume History
+                          </Link>
+                          <Link
+                            href="/profile/feedback"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white/70 dark:hover:bg-gray-800"
+                          >
+                            Feedback History
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 sm:gap-2">
                     <SignInButton mode="modal">
-                      <button className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-white transition hover:bg-primary/90">
+                      <button className="rounded-md bg-primary px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-white transition hover:bg-primary/90">
                         Sign In
                       </button>
                     </SignInButton>
                     <SignUpButton mode="modal">
-                      <button className="rounded-md border border-primary px-4 py-2 text-sm font-medium text-primary transition hover:bg-primary/10 dark:text-white">
+                      <button className="rounded-md border border-primary px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-primary transition hover:bg-primary/10 dark:text-white">
                         Sign Up
                       </button>
                     </SignUpButton>

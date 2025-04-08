@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -H 0.0.0.0",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -11,24 +11,27 @@
   "dependencies": {
     "@clerk/nextjs": "^6.13.0",
     "@emailjs/browser": "^4.4.1",
+    "@types/uuid": "^10.0.0",
     "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
-    "eslint": "^8.56.0",
-    "eslint-config-next": "^14.1.0",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^15.2.4",
     "framer-motion": "^12.0.1",
     "lucide-react": "^0.473.0",
     "mongodb": "^6.10.0",
-    "next": "^14.1.0",
+    "next": "^15.2.4",
     "next-themes": "^0.2.1",
     "react": "^18.2.0",
     "react-countup": "^6.5.3",
     "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.5.2",
     "react-icons": "^5.4.0",
-    "react-modal-video": "^2.0.2"
+    "react-modal-video": "^2.0.2",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
-    "@types/node": "^20.8.9",
-    "@types/react": "^18.2.33",
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.45",
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.35",
     "prettier": "^3.2.5",

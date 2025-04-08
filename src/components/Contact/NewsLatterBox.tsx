@@ -1,41 +1,65 @@
 "use client";
 
 import { useTheme } from "next-themes";
+import { useState } from "react";
 
 const NewsLatterBox = () => {
   const { theme } = useTheme();
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    
+    setIsSubmitting(true);
+    // Simulating API call
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setEmail("");
+      setName("");
+      alert("Thank you for subscribing!");
+    }, 1000);
+  };
 
   return (
-    <div className="relative z-10 rounded-sm bg-white p-8 shadow-three dark:bg-gray-dark sm:p-11 lg:p-8 xl:p-11">
-      <h3 className="mb-4 text-2xl font-bold leading-tight text-black dark:text-white">
+    <div className="relative z-10 rounded-sm bg-white p-4 sm:p-6 md:p-8 shadow-three dark:bg-gray-dark sm:p-11 lg:p-8 xl:p-11">
+      <h3 className="mb-4 text-xl sm:text-2xl font-bold leading-tight text-black dark:text-white">
         Subscribe to receive future updates
       </h3>
-      <p className="mb-11 border-b border-body-color border-opacity-25 pb-11 text-base leading-relaxed text-body-color dark:border-white dark:border-opacity-25">
-        Lorem ipsum dolor sited Sed ullam corper consectur adipiscing Mae ornare
-        massa quis lectus.
+      <p className="mb-6 sm:mb-8 md:mb-11 border-b border-body-color border-opacity-25 pb-6 sm:pb-8 md:pb-11 text-sm sm:text-base leading-relaxed text-body-color dark:border-white dark:border-opacity-25">
+        Stay informed about new features, resume tips, and special offers to enhance your job search experience.
       </p>
-      <div>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           name="name"
           placeholder="Enter your name"
-          className="border-stroke mb-4 w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:text-body-color-dark dark:shadow-two dark:focus:border-primary dark:focus:shadow-none"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="border-stroke mb-3 sm:mb-4 w-full rounded-sm border bg-[#f8f8f8] px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base text-body-color outline-none focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:text-body-color-dark dark:shadow-two dark:focus:border-primary dark:focus:shadow-none"
         />
         <input
           type="email"
           name="email"
           placeholder="Enter your email"
-          className="border-stroke mb-4 w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:text-body-color-dark dark:shadow-two dark:focus:border-primary dark:focus:shadow-none"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="border-stroke mb-3 sm:mb-4 w-full rounded-sm border bg-[#f8f8f8] px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base text-body-color outline-none focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:text-body-color-dark dark:shadow-two dark:focus:border-primary dark:focus:shadow-none"
+          required
         />
-        <input
+        <button
           type="submit"
-          value="Subscribe"
-          className="mb-5 flex w-full cursor-pointer items-center justify-center rounded-sm bg-primary px-9 py-4 text-base font-medium text-white shadow-submit duration-300 hover:bg-primary/90 dark:shadow-submit-dark"
-        />
-        <p className="text-center text-base leading-relaxed text-body-color dark:text-body-color-dark">
-          No spam guaranteed, So please don’t send any spam mail.
+          className="mb-4 sm:mb-5 flex w-full cursor-pointer items-center justify-center rounded-sm bg-primary px-9 py-3 text-sm sm:text-base font-medium text-white shadow-submit duration-300 hover:bg-primary/90 dark:shadow-submit-dark disabled:opacity-70 disabled:cursor-not-allowed"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Subscribing..." : "Subscribe"}
+        </button>
+        <p className="text-center text-xs sm:text-sm leading-relaxed text-body-color dark:text-body-color-dark">
+          No spam guaranteed, So please don't send any spam mail.
         </p>
-      </div>
+      </form>
 
       <div>
         <span className="absolute left-2 top-7">

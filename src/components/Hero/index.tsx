@@ -4,6 +4,8 @@ import axios from "axios";
 import { FaUpload, FaSearch, FaFilePdf, FaCheckCircle, FaTimesCircle, FaRegLightbulb, FaChartLine, FaCommentAlt } from "react-icons/fa";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useResumeContext } from "@/context/ResumeContext";
+import { v4 as uuidv4 } from 'uuid';
 
 const Hero = () => {
   const [files, setFiles] = useState([]);
@@ -15,6 +17,7 @@ const Hero = () => {
   const [submissionType, setSubmissionType] = useState(null);
   const [resumeFeedback, setResumeFeedback] = useState({});
   const [isFeedbackLoading, setIsFeedbackLoading] = useState(false);
+  const { addResume, addFeedback, activeProfileId } = useResumeContext();
 
   // Backend URLs
   const localBackendURL = "http://127.0.0.1:5001/parseresume";
@@ -34,32 +37,60 @@ const Hero = () => {
   };
 
   const handleSubmit = async () => {
-    if (files.length !== numResumes) {
-      alert(`Please upload exactly ${numResumes} resumes.`);
-      return;
-    }
-
-    setIsLoading(true);
-    setSubmissionType('keyword');
-    const formData = new FormData();
-    Array.from(files).forEach((file) => formData.append("file", file));
-    formData.append("requiredSkills", requiredSkills);
-    
-    // Add the primary skill parameter (use first skill or empty string)
-    const skillsArray = requiredSkills.split(',').map(s => s.trim()).filter(s => s);
-    const primarySkill = skillsArray.length > 0 ? skillsArray[0] : "";
-    formData.append("skill", primarySkill);
-
     try {
-      const response = await axios.post(backendURL, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      setIsLoading(true);
+      setSubmissionType("resume");
+
+      if (!files || files.length === 0) {
+        alert("Please select a file to upload.");
+        setIsLoading(false);
+        return;
+      }
+
+      // Extract skills from the input field
+      const skillsArray = requiredSkills.split(",").map(skill => skill.trim()).filter(skill => skill);
+      const primarySkill = skillsArray.length > 0 ? skillsArray[0].toLowerCase() : "";
+
+      const formData = new FormData();
+      for (let i = 0; i < files.length; i++) {
+        formData.append("file", files[i]);
+      }
+      formData.append("skill", primarySkill);
+      formData.append("requiredSkills", requiredSkills);
+
+      const response = await axios.post(backendURL, formData);
 
       if (response.status === 200) {
         setOutput(response.data);
         setUploadStatus("success");
+        
+        // Store resume data in context
+        const today = new Date();
+        const formattedDate = today.toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        });
+        
+        // Save each resume to context
+        if (response.data.top_resumes && Array.isArray(response.data.top_resumes)) {
+          response.data.top_resumes.forEach((resume) => {
+            const resumeEntry = {
+              id: uuidv4(),
+              filename: resume.filename,
+              uploadDate: formattedDate,
+              atsScore: resume.ats_score,
+              matchedSkills: resume.matched_skills,
+              position: skillsArray.length > 0 
+                ? `${primarySkill.charAt(0).toUpperCase() + primarySkill.slice(1)} Position`
+                : "Unlisted Position",
+              profileId: activeProfileId || "default" // Associate the resume with the active profile
+            };
+            
+            addResume(resumeEntry);
+          });
+        }
+        
         // After successful upload, get feedback for the resumes
         getResumeFeedback(formData);
       } else {
@@ -100,6 +131,34 @@ const Hero = () => {
           } else {
             feedbackData[filename] = feedback;
           }
+          
+          // Store feedback in context
+          const today = new Date();
+          const formattedDate = today.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          });
+          
+          const feedbackLines = typeof feedback === 'string' 
+            ? feedback.split('\n').filter(line => line.trim()) 
+            : ["No feedback available"];
+          
+          const skillsArray = requiredSkills.split(',').map(s => s.trim()).filter(s => s);
+          const primarySkill = skillsArray.length > 0 ? skillsArray[0] : "";
+          
+          const feedbackEntry = {
+            id: uuidv4(),
+            resumeFilename: filename,
+            position: skillsArray.length > 0 
+              ? `${primarySkill.charAt(0).toUpperCase() + primarySkill.slice(1)} Position`
+              : "Unlisted Position",
+            date: formattedDate,
+            feedback: feedbackLines,
+            profileId: activeProfileId || "default" // Associate feedback with active profile
+          };
+          
+          addFeedback(feedbackEntry);
         });
         
         setResumeFeedback(feedbackData);

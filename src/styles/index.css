@@ -42,18 +42,62 @@
 @layer base {
   body {
     @apply bg-white text-black dark:bg-dark dark:text-body-color-dark; /* Background and text colors for both modes */
+    @apply text-sm sm:text-base; /* Default font size for better mobile readability */
   }
 
   h1, h2, h3, h4, h5, h6, p, span, a {
     @apply text-black dark:text-white; /* Ensuring contrast for headings, paragraphs, and links */
   }
+
+  /* Responsive font sizes for headings */
+  h1 {
+    @apply text-2xl sm:text-3xl md:text-4xl font-bold;
+  }
+  
+  h2 {
+    @apply text-xl sm:text-2xl md:text-3xl font-bold;
+  }
+  
+  h3 {
+    @apply text-lg sm:text-xl md:text-2xl font-semibold;
+  }
+  
+  /* Add focus styles for better accessibility */
+  a:focus, button:focus, input:focus, textarea:focus, select:focus {
+    @apply outline-none ring-2 ring-primary ring-opacity-50;
+  }
 }
 
-
-
-
-
 @layer components {
+  /* Mobile-first responsive container padding */
+  .container {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Responsive button sizes */
+  .btn {
+    @apply px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base font-medium rounded-md transition-all;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-primary/90;
+  }
+
+  .btn-outline {
+    @apply border border-primary text-primary hover:bg-primary/10 dark:text-white;
+  }
+
+  /* Form elements */
+  .form-input {
+    @apply w-full px-3 py-2 text-sm border rounded-md focus:ring-2 focus:ring-primary focus:border-primary;
+  }
+
+  /* Card styles */
+  .card {
+    @apply bg-white dark:bg-gray-dark rounded-lg shadow-lg overflow-hidden;
+  }
+
+  /* Existing component styles */
   input[type="checkbox"]:checked ~ label span svg {
     @apply inline-flex;
   }
@@ -76,5 +120,30 @@
 }
 
 @layer utilities {
+  /* Mobile touch-friendly elements */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px]; /* Minimum size for touch targets */
+  }
+
+  /* Hide elements on small screens but show on larger ones */
+  .hide-on-mobile {
+    @apply hidden sm:block;
+  }
+
+  /* Show elements only on mobile */
+  .mobile-only {
+    @apply block sm:hidden;
+  }
+
+  /* Improved spacing for mobile */
+  .mobile-stack > * + * {
+    @apply mt-4;
+  }
+
+  /* Fixed position elements that respect the safe area */
+  .safe-bottom {
+    @apply pb-[env(safe-area-inset-bottom)];
+  }
+
   /* Add any custom utilities for dark mode if required */
 }
