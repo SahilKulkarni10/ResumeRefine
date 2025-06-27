@@ -164,14 +164,16 @@ const FeedbackHistoryPage = () => {
                   
                   {expandedId === entry.id && (
                     <div className="border-t border-body-color/20 p-4 md:p-6">
-                      <h4 className="text-sm md:text-md font-semibold text-black dark:text-white mb-3 md:mb-4">
+                      <h4 className="text-base md:text-xl font-semibold text-black dark:text-white mb-4 md:mb-6">
                         ATS Feedback:
                       </h4>
-                      <ul className="space-y-2 md:space-y-3">
+                      <ul className="space-y-3 md:space-y-4">
                         {entry.feedback.map((item, index) => (
-                          <li key={index} className="flex text-xs md:text-sm">
-                            <span className="text-primary mr-2 flex-shrink-0">•</span>
-                            <span className="text-body-color dark:text-body-color-dark">{item}</span>
+                          <li key={index} className="flex items-start">
+                            <span className="text-primary mr-3 flex-shrink-0 text-lg md:text-xl mt-0.5">•</span>
+                            <span className="text-gray-800 dark:text-gray-200 text-base md:text-lg leading-relaxed">
+                              {item}
+                            </span>
                           </li>
                         ))}
                       </ul>
@@ -225,4 +227,4 @@ const FeedbackHistoryPage = () => {
   );
 };
 
-export default FeedbackHistoryPage; 
+export default FeedbackHistoryPage;

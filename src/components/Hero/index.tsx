@@ -524,39 +524,34 @@ const Hero = () => {
                                     </a>
                                   </div>
                                 ) : (
-                                  // Proper Feedback Display with Enhanced Formatting
-                                  <div className="bg-gradient-to-r from-yellow-50 to-amber-50 p-4 rounded-lg shadow-sm dark:from-yellow-900/10 dark:to-amber-900/10 border border-yellow-100 dark:border-yellow-800/20">
-                                    <div className="space-y-3">
-                                      {resumeFeedback[resume.filename].split('\n').filter(line => line.trim()).map((line, index) => (
-                                        <div key={index} className="flex items-start">
-                                          {line.trim().startsWith('•') ? (
-                                            <>
-                                              <span className="text-amber-500 dark:text-amber-400 mr-2 mt-0.5">{line.trim().charAt(0)}</span>
-                                              <p className="text-gray-700 dark:text-gray-300 text-sm flex-1">
-                                                {line.trim().substring(1).trim()}
-                                              </p>
-                                            </>
-                                          ) : (
-                                            <p className="text-gray-700 dark:text-gray-300 text-sm">
-                                              {line.trim()}
-                                            </p>
-                                          )}
+                                  <div className="space-y-6">
+                                    {resumeFeedback[resume.filename].split('\n').filter(line => line.trim()).map((line, index) => {
+                                      const isSection = line.startsWith('Section');
+                                      return (
+                                        <div key={index} className="bg-gradient-to-r from-yellow-50 to-amber-50 p-5 rounded-lg shadow-sm dark:from-yellow-900/10 dark:to-amber-900/10 border border-yellow-100 dark:border-yellow-800/20">
+                                          <div className="flex gap-4">
+                                            <div className="flex-shrink-0">
+                                              <div className="w-8 h-8 flex items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+                                                <span className="text-amber-600 dark:text-amber-400 font-semibold text-sm">
+                                                  {Math.floor(index/2) + 1}
+                                                </span>
+                                              </div>
+                                            </div>
+                                            <div className="flex-1">
+                                              {isSection ? (
+                                                <h5 className="text-gray-900 dark:text-white font-semibold text-lg md:text-xl mb-2">
+                                                  {line.split(': ')[1]}
+                                                </h5>
+                                              ) : (
+                                                <p className="text-gray-700 dark:text-gray-300 text-base md:text-lg leading-relaxed">
+                                                  {line}
+                                                </p>
+                                              )}
+                                            </div>
+                                          </div>
                                         </div>
-                                      ))}
-                                    </div>
-
-                                    <div className="mt-3 pt-3 border-t border-yellow-200 dark:border-yellow-800/30">
-                                      <div className="flex justify-between items-center">
-                                        <span className="text-xs text-gray-500 dark:text-gray-400">
-                                          AI-powered feedback based on your resume content
-                                        </span>
-                                        <div className="flex space-x-2">
-                                          <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-300">
-                                            AI Analysis
-                                          </span>
-                                        </div>
-                                      </div>
-                                    </div>
+                                      );
+                                    })}
                                   </div>
                                 )}
                               </div>
