@@ -228,11 +228,10 @@ const Hero = () => {
   ];
 
   return (
-    <>
-      <section
-        id="home"
-        className="relative z-10 overflow-hidden bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 pb-16 pt-[120px] dark:bg-gradient-to-r dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 md:pb-[120px] md:pt-[150px] xl:pb-[160px] xl:pt-[180px] 2xl:pb-[200px] 2xl:pt-[210px]"
-      >
+    <section
+      id="home"
+      className="relative z-10 overflow-hidden bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 pb-16 pt-[120px] dark:bg-gradient-to-r dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 md:pb-[120px] md:pt-[150px] xl:pb-[160px] xl:pt-[180px] 2xl:pb-[200px] 2xl:pt-[210px]"
+    >
        
         <div className="absolute inset-0 z-0 overflow-hidden">
           <div className="absolute -left-40 -top-40 h-80 w-80 rounded-full bg-blue-500 opacity-10 blur-3xl"></div>
@@ -601,7 +600,6 @@ const Hero = () => {
           </div>
         </div>
       </section>
-    </>
   );
 };
 
